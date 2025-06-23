@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WordpadX</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+</head>
+
+<body class="light">
+    <div class="container">
+        <div class="toolbar">
+            <div class="toolbar-group">
+                <select id="fontFamily" title="Font Family">
+                    <option value="Arial">Arial</option>
+                    <option value="Calibri">Calibri</option>
+                    <option value="Times New Roman">Times New Roman</option>
+                    <option value="Courier New">Courier New</option>
+                    <option value="Verdana">Verdana</option>
+                    <option value="Georgia">Georgia</option>
+                </select>
+                <select id="fontSize" title="Font Size">
+                    <option value="12">12</option>
+                    <option value="16">16</option>
+                    <option value="20">20</option>
+                    <option value="24">24</option>
+                    <option value="32">32</option>
+                    <option value="40">40</option>
+                </select>
+            </div>
+
+            <div class="toolbar-group">
+                <button onclick="toggleButton(this); execCommand('bold')" class="toggle-btn" title="Bold"><i
+                        class="fas fa-bold"></i></button>
+                <button onclick="toggleButton(this); execCommand('italic')" class="toggle-btn" title="Italic"><i
+                        class="fas fa-italic"></i></button>
+                <button onclick="toggleButton(this); execCommand('underline')" class="toggle-btn" title="Underline"><i
+                        class="fas fa-underline"></i></button>
+                <button onclick="toggleButton(this); execCommand('strikeThrough')" class="toggle-btn"
+                    title="Strikethrough"><i class="fas fa-strikethrough"></i></button>
+            </div>
+
+            <div class="toolbar-group">
+                <button onclick="toggleButton(this); execCommand('justifyLeft')" class="toggle-btn"
+                    title="Align Left"><i class="fas fa-align-left"></i></button>
+                <button onclick="toggleButton(this); execCommand('justifyCenter')" class="toggle-btn"
+                    title="Align Center"><i class="fas fa-align-center"></i></button>
+                <button onclick="toggleButton(this); execCommand('justifyRight')" class="toggle-btn"
+                    title="Align Right"><i class="fas fa-align-right"></i></button>
+                <button onclick="toggleButton(this); execCommand('justifyFull')" class="toggle-btn" title="Justify"><i
+                        class="fas fa-align-justify"></i></button>
+            </div>
+
+            <div class="toolbar-group">
+                <input type="color" id="textColor" onchange="changeColor('foreColor', this.value)" title="Text Color" />
+                <input type="color" id="bgColor" onchange="changeColor('backColor', this.value)"
+                    title="Background Color" />
+            </div>
+
+            <div class="toolbar-group">
+                <button onclick="toggleButton(this); execCommand('insertOrderedList')" class="toggle-btn"
+                    title="Ordered List"><i class="fas fa-list-ol"></i></button>
+                <button onclick="toggleButton(this); execCommand('insertUnorderedList')" class="toggle-btn"
+                    title="Unordered List"><i class="fas fa-list-ul"></i></button>
+                <button onclick="execCommand('insertImage', prompt('Enter image URL'))" class="toggle-btn"
+                    title="Insert Image"><i class="fas fa-image"></i></button>
+                <button onclick="execCommand('createLink', prompt('Enter URL'))" class="toggle-btn"
+                    title="Insert Link"><i class="fas fa-link"></i></button>
+            </div>
+
+            <div class="toolbar-group">
+                <button onclick="execCommand('undo')" class="toggle-btn" title="Undo"><i
+                        class="fas fa-undo"></i></button>
+                <button onclick="execCommand('redo')" class="toggle-btn" title="Redo"><i
+                        class="fas fa-redo"></i></button>
+            </div>
+
+            <div class="toolbar-group">
+                <button onclick="toggleButton(this); execCommand('superscript')" class="toggle-btn"
+                    title="Superscript"><i class="fas fa-superscript"></i></button>
+                <button onclick="toggleButton(this); execCommand('subscript')" class="toggle-btn" title="Subscript"><i
+                        class="fas fa-subscript"></i></button>
+                <button onclick="toggleFullScreen()" class="full-screen" title="Full Screen"><i
+                        class="fas fa-expand"></i></button>
+            </div>
+
+            <div class="toolbar-group">
+                <button onclick="toggleSpellCheck()" class="toggle-btn" title="Spell Check"><i
+                        class="fas fa-spell-check"></i></button>
+                <button onclick="startVoiceInput()" class="toggle-btn" title="Voice Input"><i
+                        class="fas fa-microphone"></i></button>
+                <button onclick="readAloud()" class="toggle-btn" title="Read Aloud"><i
+                        class="fas fa-volume-up"></i></button>
+            </div>
+
+            <div class="toolbar-group">
+                <select id="themeSelector" onchange="changeTheme(this.value)" title="Theme">
+                    <option value="light">Light</option>
+                    <option value="dark">Dark</option>
+                    <option value="space">Space</option>
+                </select>
+                <select id="templateSelector" onchange="applyTemplate(this.value)" title="Templates">
+                    <option value="">Select Template</option>
+                    <option value="letter">Letter</option>
+                    <option value="resume">Resume</option>
+                    <option value="notes">Notes</option>
+                </select>
+            </div>
+
+            <div class="toolbar-group">
+                <button onclick="exportToPDF()" title="Export to PDF"><i class="fas fa-file-pdf"></i></button>
+                <button onclick="exportToDocx()" title="Export to DOCX"><i class="fas fa-file-word"></i></button>
+                <button onclick="saveDocument()" title="Save"><i class="fas fa-save"></i></button>
+            </div>
+        </div>
+
+        <div class="status-bar">
+            <span id="wordCount">Words: 0</span>
+            <span id="charCount">Characters: 0</span>
+            <span id="autoSaveStatus">Auto-save: On</span>
+        </div>
+
+        <div id="editor" contenteditable="true" class="editor"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
